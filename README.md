@@ -1,6 +1,6 @@
 # The Unofficial Guide
 
-<!-- Replace this line with your name and which corpus you picked. -->
+By Daniela Valerio Desanero — corpus: campus_life
 
 > **This file is your submission.** Fill it in as you go — most sections get
 > written during the milestone that produces them, not at the end.
@@ -21,11 +21,7 @@
 
 ## What This Does
 
-<!-- Three or four sentences. Which corpus you picked, and the kinds of
-     questions your system answers. Write it for someone who has never seen
-     this repo.
-
-     Milestone 5. -->
+This is a Q&A tool for the campus_life corpus, basically a bunch of real student posts about housing, dining, classes, and other campus stuff. You can ask it normal questions like 'is the housing lottery random' or 'what are the printing fees' and it'll dig through the docs and give you a real answer with the source attached. If you ask it something totally unrelated, like a random trivia question, it's smart enough to just say it doesn't know instead of making something up.
 
 ## Chunking Strategy
 
@@ -144,9 +140,9 @@ No, the housing lottery is not random in the way most people assume. While risin
 
      Milestone 5. -->
 
-**1.**
+**1.** My embedding step kept crashing with some ONNXRuntime error on my Mac. I asked Claude to help me figure it out and it turned out to be a known bug with Apple's CoreML stuff. Claude found the fix (adding preferred_providers to force it to run on CPU instead), but I'm the one who actually edited the file and reindexed everything.
 
-**2.**
+**2.** For the chunking part, I had no idea how to split up the documents in a way that made sense. I showed Claude a few of my actual files and it suggested splitting on paragraph breaks instead of just cutting every 800 characters, since my docs are mostly short posts with one idea per paragraph. I looked over the logic (like the 120 character minimum so we don't get tiny useless chunks) before we actually put it in.
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
