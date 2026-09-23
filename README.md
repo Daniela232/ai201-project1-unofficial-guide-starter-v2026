@@ -110,27 +110,28 @@ Best time to do laundry here is Tuesday or Wednesday morning. Sunday after 6pm y
 <!-- One complete question and answer, pasted as text, with the source line
      visible. Milestone 4. -->
 
-**Question:**
+**Question:** Is the housing lottery random?
 
 **Answer:**
 
 ```
+No, the housing lottery is not random in the way most people assume. While rising sophomores get a number drawn at random, juniors and seniors are ordered by accumulated credit hours first, with random selection used only as a tie-break (admin_housing_lottery.txt).
 ```
 
-**My relevance cutoff:**
-
-<!-- The number you set in config.py, and how you got there.
-
-     You ran five questions your corpus covers and the five in OUT_OF_SCOPE
-     that it clearly doesn't, and wrote down the best distance for each. What
-     did those two groups look like? Where was the gap? Put the actual numbers
-     here — the table below wants all ten rows.
-
-     Milestone 4. -->
+**My relevance cutoff:** 0.6 (the starter's default). I ran my five in-corpus test questions and the five OUT_OF_SCOPE questions and got a clean gap: in-corpus questions topped out at 0.488, out-of-corpus questions started at 0.803. A cutoff of 0.6 sits comfortably in that gap with room on both sides.
 
 | Question | In corpus? | Best distance |
 |---|---|---|
-|  |  |  |
+| Do I really need to buy the books for my CS class, or are they available in the library? | Yes | 0.488 |
+| What are the printing fees for color and black and white? | Yes | 0.321 |
+| Is the housing lottery random? | Yes | 0.254 |
+| What time is the cafe open until? | Yes | 0.381 |
+| How loud is Aldridge Hall at night? | Yes | 0.413 |
+| What is the capital of Mongolia? | No | 0.825 |
+| How do I change the oil in a diesel engine? | No | 0.934 |
+| Who won the 1994 World Cup? | No | 0.886 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.803 |
+| How do I write a for loop in Rust? | No | 0.877 |
 
 ## How I Used AI
 
