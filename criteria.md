@@ -57,41 +57,21 @@ in at least 4 of 5 tries.
 
 ## 4. Something about your chunks
 
-<!-- YOU WRITE THIS ONE.
-
-     How would you know if your chunks were the right size? Name something
-     countable or observable.
-
-     Examples of the right shape — don't copy these, they should come from
-     what you actually saw in Milestone 3:
-       - "At least 4 of 5 sampled chunks read as a complete thought, with no
-          sentence cut in half at either end."
-       - "No chunk is shorter than 200 characters, since anything below that
-          in my corpus turned out to be a heading with no content under it." -->
-
-
+When I look at 7 random chunks from my documents, at least 4 of them make sense on their own.
 
 **Why this target:**
 
-
+I picked 4 of 7 because some of my documents are short posts that might get cut awkwardly, and I'd rather set an honest bar than a perfect one.
 
 ---
 
 ## 5. Your choice
 
-<!-- YOU WRITE THIS ONE TOO.
-
-     Pick something you actually care about getting right. It could be about
-     speed, about refusals, about a particular kind of question your corpus
-     handles badly, about source attribution being correct rather than merely
-     present — anything, as long as it names a number or an observable
-     outcome. -->
-
-
+8 out of 10 of my answers actually name a specific source document, not just a vague summary.
 
 **Why this target:**
 
-
+I picked 8 out of 10 because a couple of my questions are broad enough that the answer might reasonably pull from multiple sources without naming just one specifically.
 
 ---
 
