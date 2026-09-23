@@ -29,8 +29,14 @@
 
 ## Chunking Strategy
 
-**Chunk size:**
-**Overlap:**
+**Chunk size:** Not fixed — split on paragraph breaks (blank lines), with a 120-character minimum so no fragment is too small to be useful.
+**Overlap:** None.
+
+Most of the documents in `campus_life` are short posts: a title line followed by one or two paragraphs, each covering a distinct idea (e.g. "wait times" vs. "hours and cost" in the same dining hall post). The starter's fixed 800-character window barely touched these documents at all — almost nothing reached 800 characters, so it output 88 chunks from 88 documents, doing effectively nothing.
+
+Splitting on paragraph breaks respects how these documents are actually written: one paragraph, one idea. A short leading title line on its own would become a useless orphan chunk, so any paragraph under 120 characters gets merged into its neighbor. Since I'm splitting at natural breaks rather than an arbitrary character count, no sentence gets cut in half, so overlap isn't needed.
+
+Result: 88 documents became 121 chunks, averaging 230 characters (down from an 800-character ceiling), shortest 120, longest 421.
 
 <!-- What about YOUR documents made you pick these numbers? Short posts and
      long sectioned guides don't want the same chunking, and "800 seemed
@@ -53,29 +59,50 @@
 
      Milestone 3. -->
 
-**Chunk 1** — source: `` — produced by: ``
+**Chunk 1** — source: `admin_add_drop_deadline.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
+On the add/drop deadline
+
+You can add a course through the end of the second week. Dropping is a longer window — through the end of week six — but a drop after week two shows as a W on your transcript. Nothing anywhere on the registrar's site says this plainly, and students find out from each other.
 ```
 
-**Chunk 2** — source: `` — produced by: ``
+**Chunk 2** — source: `course_cs_210_exams.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
+CS 210 Data Structures — assessment
+
+Two midterms and a final, all drawn from lecture material rather than the textbook. Midterms are curved, the final is not.
+
+Do the labs even though they're only 10% — the exams reuse the lab problems.
 ```
 
-**Chunk 3** — source: `` — produced by: ``
+**Chunk 3** — source: `course_phys_130_exams.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
+PHYS 130 Mechanics — assessment
+
+Three midterms, no final, plus a lab practical. Not curved, but the lowest midterm is dropped.
+
+The lab practical is worth 20% and almost nobody prepares for it.
 ```
 
-**Chunk 4** — source: `` — produced by: ``
+**Chunk 4** — source: `housing_aldridge_hall.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
+Aldridge Hall — what it's actually like
+
+I lived here my sophomore year. Built 1968, renovated 2019. Rooms are doubles with a shared bathroom per floor.
 ```
 
-**Chunk 5** — source: `` — produced by: ``
+**Chunk 5** — source: `housing_morrow_house_laundry.txt#0` — produced by: `chunker.py::split_documents`
 
 ```
+Laundry in Morrow House
+
+Machines take $1.50 wash, $1.25 dry, coin or card. There are eight washers and six dryers for the building, which is the wrong ratio and means the dryers back up on Sunday evenings.
+
+Best time to do laundry here is Tuesday or Wednesday morning. Sunday after 6pm you will wait.
 ```
 
 ## Sample Answer
