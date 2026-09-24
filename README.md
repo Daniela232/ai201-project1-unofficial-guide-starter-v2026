@@ -171,15 +171,43 @@ No, the housing lottery is not random in the way most people assume. While risin
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 4/5 | 4/5 | 4/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. At least 4 of 7 random chunks stand alone | 4 of 7 | 5/7 | 5/7 | 5/7 | MET |
+| 5. 8 of 10 answers name a specific source | 8 of 10 | 15/15 | 15/15 | 15/15 | MET |
 
-<!-- Underneath, paste the REAL output for each criterion from one of your
-     runs — the actual text your system produced, not a description of it.
-     Name the file and function that produced it. -->
+Produced by `run_eval.py::main`, full output committed in `results/run_2026-09-23_2108_before.md`.
+
+Real output, criterion 1 (Is the housing lottery random?), run 1, best distance 0.2541, passed the gate, sources retrieved: admin_housing_lottery.txt, admin_parking_permits.txt, advising_registration.txt, housing_aldridge_hall.txt, housing_innisfree_hall.txt:
+
+```
+The housing lottery is not entirely random in the way most people assume. Rising sophomores get a number drawn at random, but juniors and seniors are ordered first by accumulated credit hours, with random tie-breaks used only for ties.
+
+Source: admin_housing_lottery.txt
+```
+
+Real output, criterion 3, from `run_eval.py::check_out_of_scope`, cutoff 0.6, refused 5 of 5:
+
+```
+What is the capital of Mongolia? -- best distance 0.825 -- refused
+How do I change the oil in a diesel engine? -- best distance 0.934 -- refused
+Who won the 1994 World Cup? -- best distance 0.886 -- refused
+What is the recommended dosage of ibuprofen for a headache? -- best distance 0.803 -- refused
+How do I write a for loop in Rust? -- best distance 0.877 -- refused
+```
+
+Real output, criterion 4, from `chunker.py::split_documents` via `app.py chunks -n 7` (identical across all three runs, since chunking is deterministic):
+
+```
+Chunk 4 | source: course_stat_150.txt#1 | produced by: chunker.py::split_documents
+
+Expect 5 to 6 hours a week outside class.
+
+The one piece of advice: the dropped midterm makes the first one low-stakes; use it to learn the format.
+```
+
+This one is the weakest of the 7: it never names the course, so "the first one" (referring to a midterm) only makes sense if you already know you are reading about STAT 150.
 
 ## Verdicts
 
@@ -194,11 +222,11 @@ No, the housing lottery is not random in the way most people assume. While risin
 
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
-| 4 |  |  |  |
-| 5 |  |  |  |
+| 1 | Retrieved chunk contains the answer, 4 of 5 | MET | All three runs landed on 4 of 5. The one miss every time was the Aldridge Hall noise question: the only chunk retrieved says quiet floors are enforced, but never actually describes how loud the building is at night, so the retrieved chunk did not contain the answer. This one came close to missing since 4 of 5 is exactly my target, not comfortably above it. |
+| 2 | Every answer names a source, 5 of 5 | MET | All 15 outputs (5 questions times 3 runs) named a specific file. No exceptions across any run. |
+| 3 | Gate stops out-of-corpus questions, 4 of 5 | MET | The gate is deterministic, so one pass was the whole measurement. All 5 out-of-scope questions were refused, and their distances (0.803 to 0.934) sit well clear of the 0.6 cutoff. |
+| 4 | At least 4 of 7 random chunks stand alone | MET | I judged all 7 chunks by reading them without their surrounding context. 5 of 7 clearly stood alone. The other 2 were borderline: one referenced "the housing lottery" without explaining it, and one referenced "the first one" (a midterm) without naming which course, which only makes sense with outside context. Both of those leaned toward not standing alone, but even counting them as failures, 5 of 7 clears my target of 4 of 7. |
+| 5 | 8 of 10 answers name a specific source | MET | All 15 outputs across the 5 questions and 3 runs named one specific file each. None were vague or absent. |
 
 ## Diagnoses
 
