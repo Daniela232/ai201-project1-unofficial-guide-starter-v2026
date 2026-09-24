@@ -228,25 +228,15 @@ This one is the weakest of the 7: it never names the course, so "the first one" 
 | 4 | At least 4 of 7 random chunks stand alone | MET | I judged all 7 chunks by reading them without their surrounding context. 5 of 7 clearly stood alone. The other 2 were borderline: one referenced "the housing lottery" without explaining it, and one referenced "the first one" (a midterm) without naming which course, which only makes sense with outside context. Both of those leaned toward not standing alone, but even counting them as failures, 5 of 7 clears my target of 4 of 7. |
 | 5 | 8 of 10 answers name a specific source | MET | All 15 outputs across the 5 questions and 3 runs named one specific file each. None were vague or absent. |
 
+**A note on scoring:** After writing `scorer.py` (a substring test: does the `expects` phrase appear in the answer?), I re-ran the test and the automated scorer marked all 15 outputs "pass," including the Aldridge Hall noise question. My `expects` phrase was "quiet floors," and the generated answer does contain that phrase ("the quiet floors on levels 3 and 4 in Aldridge Hall are genuinely enforced"). But the question asked how loud the building actually is at night, and the answer never really answers that, it just confirms a policy exists. The substring test cannot tell the difference between a phrase appearing because it truly answers the question and a phrase appearing in a sentence that is close to the topic but does not actually respond to it. I'm keeping my manual verdict of 4 of 5 for criterion 1 rather than the scorer's 5 of 5, since a careful read shows the retrieved chunk did not actually contain the answer to what was asked.
+
 ## Diagnoses
 
-<!-- For each miss: which stage caused it, and how. The stage alone isn't
-     enough — you need the mechanism.
+I didn't miss any of my five criteria, every run passed. But that's not usually a good thing. If everything passes easily, it might mean the targets were too easy, not that the system is great.
 
-     Not a diagnosis: "Question 3 didn't work."
-     A diagnosis:     "Question 3 asks about laundry costs. The answer is in
-                       one sentence that got split across two chunks, so
-                       neither chunk on its own contains it."
+If I had to pick one to make harder, it's criterion 1. Every run landed at exactly 4 out of 5, right at the edge, not above it. The one question that kept failing was "how loud is Aldridge Hall at night." Looking into it, my corpus just doesn't have a real answer to that question. There's a chunk that says quiet floors are enforced, but nothing about how loud it actually gets at night. So this question isn't really testing if my system works, it's testing if my system admits when it doesn't know something. Next time I'd either raise the target to 5 out of 5, or just pick a different test question that my corpus can actually answer.
 
-     The five stages: loading → chunking → embedding → retrieval → generation.
-
-     Look for a pattern. If three misses all ask about numbers, that's one
-     problem, not three.
-
-     Missed nothing? Say so, then say honestly whether your targets were set
-     low, and which one you'd tighten and to what.
-
-     Milestone 3. -->
+Criterion 4 also felt a little easy. I got 5 out of 7 chunks that stood on their own, which beats my target of 4 out of 7, but 2 of those 5 were shaky calls. One mentioned "the housing lottery" without explaining what that is. Another said "the first one" without saying which class it meant. If I ran this test again a few more times, it wouldn't surprise me if it dropped to exactly 4 out of 7. So this one passed, but not by a lot.
 
 ## The Improvement
 
