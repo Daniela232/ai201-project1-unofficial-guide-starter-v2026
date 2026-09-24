@@ -240,12 +240,9 @@ Criterion 4 also felt a little easy. I got 5 out of 7 chunks that stood on their
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** I added one new rule to the grounding instruction in `generate.py::GROUNDING_INSTRUCTION`: if the documents only mention a related policy or fact but do not directly answer what was asked, the model must say so plainly rather than letting the related detail stand in for an answer.
 
-**Why I picked it:**
-
-<!-- Connect it to a specific diagnosis above in one sentence. If you can't,
-     you picked a fix because it sounded impressive. -->
+**Why I picked it:** My diagnosis found that the Aldridge Hall noise question retrieved a chunk that mentions a related policy (quiet floors are enforced) but never actually describes loudness, and the model was answering as if that policy substituted for a real answer. This rule targets exactly that gap between "the documents mention something related" and "the documents actually answer the question."
 
 ### Run Log — After
 
@@ -254,20 +251,33 @@ Criterion 4 also felt a little easy. I got 5 out of 7 chunks that stood on their
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 4/5 | 4/5 | 4/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. At least 4 of 7 random chunks stand alone | 4 of 7 | 5/7 | 5/7 | 5/7 | MET |
+| 5. 8 of 10 answers name a specific source | 8 of 10 | 15/15 | 15/15 | 15/15 | MET |
 
-**Did it help?**
+Produced by `run_eval.py::main`, full output committed in `results/run_2026-09-23_2151_after.md`.
 
-<!-- Say plainly whether it did, and how you know. If it made things worse,
-     say that — a change that backfired, honestly reported, earns full credit
-     and is more interesting than one that worked. What matters is that you can
-     tell.
+All five structural verdicts are unchanged from before. That is expected: this improvement only edited the grounding prompt in `generate.py::GROUNDING_INSTRUCTION`, and none of my five criteria measure the wording of a generated answer closely enough to catch the actual effect. The real change only shows up in the answer text itself, below.
 
-     Milestone 4. -->
+Real output, Aldridge Hall question (the case the fix targeted), run 2, best distance 0.4141, passed the gate, sources retrieved: housing_aldridge_hall.txt, housing_aldridge_hall_noise.txt, housing_innisfree_hall_noise.txt, housing_morrow_house_noise.txt, housing_old_brewhouse_noise.txt:
+
+```
+The provided documents do not directly answer how loud Aldridge Hall is at night. They only state that quiet floors on floors 3 and 4 are genuinely enforced (housing_aldridge_hall_noise.txt).
+```
+
+Compare that to the same question before the change (run 1, before): "Based on the provided documents, the quiet floors on floors 3 and 4 in Aldridge Hall are genuinely enforced (housing_aldridge_hall_noise.txt). The documents do not provide specific information about noise levels at night beyond this." The before version buried the disclaimer as an afterthought; the after version leads with it, which is the improvement working as intended.
+
+Real output, the books question (not the case the fix targeted, but affected anyway), run 2, best distance 0.4796, passed the gate, sources retrieved: admin_library_holds.txt, course_cs_340.txt, course_cs_340_exams.txt, money_textbooks.txt, study_library_hours.txt:
+
+```
+The provided documents do not directly answer whether you need to buy the books for your CS class or if they are available in the library. (Source: money_textbooks.txt, course_cs_340.txt, course_cs_340_exams.txt, admin_library_holds.txt, study_library_hours.txt)
+```
+
+This is the cost. Before the change, this same question reliably surfaced the useful "two-hour reserve" fact from money_textbooks.txt. After the change, the model got more cautious across the board, and on this run it withheld a fact it actually had, rather than only withholding on the case that genuinely lacked an answer.
+
+**Did it help?** Yes, partially, and it came with a real cost. On the exact case the diagnosis pointed at, Aldridge Hall, the new rule worked 2 of 3 runs, correctly leading with "the documents do not directly answer this" instead of quietly substituting the enforcement policy as if it answered the question. But none of my five structural criteria moved, since none of them score the wording of the generated answer closely enough to catch this. And the same caution that fixed Aldridge Hall also made the model hedge on the books question in run 2, where it had a real, useful fact (the two-hour reserve) and chose not to state it. So this was a real improvement on the specific failure I diagnosed, but it was not free: it traded a false confidence problem for an occasional false caution problem elsewhere. If I had more time I would narrow the new rule so it only triggers when the retrieved chunk is about a clearly different sub-topic than the question, rather than any time part of a multi-part question goes unanswered.
 
 ## What's Still Broken
 
