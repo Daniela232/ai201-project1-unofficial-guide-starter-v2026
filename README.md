@@ -281,17 +281,16 @@ This is the cost. Before the change, this same question reliably surfaced the us
 
 ## What's Still Broken
 
-<!-- For each criterion still missed after your fix: what you'd do about it,
-     and why you stopped where you did.
+Nothing from my original five criteria is still missed, they were all MET before and after. But two real problems are still sitting there, uncovered by anything I'm measuring:
 
-     "I ran out of time" is fine if it's true. Pretending nothing is left is
-     not.
+The new grounding rule occasionally over-corrects. On the books question, run 2 withheld a real, useful fact (the library's two-hour reserve) that it had every right to state, because the new rule made the model more cautious in general, not just on the specific case I diagnosed. I'd want to narrow the rule so it only fires when the retrieved chunk is about a genuinely different sub-topic than the question, rather than any time part of a multi-part question goes unanswered. I stopped here because I'd already spent my one allowed change for this unit, and confirming this narrower version works would need its own full three-run test.
 
-     Milestone 5. -->
+None of my five criteria actually measure the wording of a generated answer closely enough to catch either the original bug or this new side effect. My scorer.py is a substring test, so it cannot tell "the phrase is there because it truly answers the question" from "the phrase is there in a sentence that's just related." I'd want a sixth check, something like "the answer's first sentence directly addresses the literal question asked," but building and validating that is genuinely a separate piece of work, not a quick add.
 
 ## What I'd Do Differently
 
-<!-- Knowing what you know now — which of your five criteria would you write
-     differently, and why?
+Two of my five criteria, in hindsight, tested the wrong thing.
 
-     Milestone 5. -->
+Criterion 1 (retrieved chunk contains the answer, 4 of 5) landed at exactly 4 of 5 in every run, and the one failure turned out to be a question my corpus genuinely cannot answer (how loud is Aldridge Hall gets at night), not a retrieval bug. I'd either swap that test question for one my corpus can actually answer, or write a separate criterion specifically for "the system correctly admits when it doesn't know," since that's really what this question was testing all along.
+
+Criterion 4 (7 random chunks, at least 4 stand alone) cleared with room to spare, but 2 of the 5 passing chunks were genuinely borderline calls I had to think hard about. I'd tighten this to something like "at least 5 of 7," since 5 clean, unambiguous passes is closer to what I actually saw than a bar that only needed 4.
